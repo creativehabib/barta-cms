@@ -1,6 +1,8 @@
 {{-- Comment thread + submission form. Params: $post --}}
 <section id="comments" class="mt-10">
-    @php($comments = $post->approvedComments ?? collect())
+    @php
+        $comments = $post->approvedComments ?? collect();
+    @endphp
     <h2 class="mb-4 flex items-center gap-2 text-xl font-black">
         <span class="h-6 w-1.5 rounded bg-brand-600"></span>
         {{ __('Comments') }}

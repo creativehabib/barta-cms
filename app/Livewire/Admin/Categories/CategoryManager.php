@@ -88,7 +88,11 @@ class CategoryManager extends Component
     public function render()
     {
         return view('livewire.admin.categories.index', [
-            'categories' => Category::withCount('posts')->orderBy('position')->orderBy('id')->get(),
+            'categories' => Category::with('parent')
+                ->withCount('posts')
+                ->orderBy('position')
+                ->orderBy('id')
+                ->get(),
         ]);
     }
 }

@@ -23,6 +23,7 @@ class SettingsPage extends Component
             'site_description' => '',
             'posts_per_page' => 12,
             'permalink_structure' => config('barta.permalink', 'date'),
+            'permalink_custom' => '/%category%/%postname%/',
             'social_facebook' => '',
             'social_twitter' => '',
             'social_youtube' => '',
@@ -47,7 +48,8 @@ class SettingsPage extends Component
         $this->validate([
             'form.site_name' => ['required', 'string', 'max:255'],
             'form.posts_per_page' => ['required', 'integer', 'min:1', 'max:100'],
-            'form.permalink_structure' => ['required', 'string'],
+            'form.permalink_structure' => ['required', 'in:default,date,day,postname,category,custom'],
+            'form.permalink_custom' => ['required_if:form.permalink_structure,custom', 'string', 'max:255', 'regex:/^\/[A-Za-z0-9%_\-\/]+\/$/'],
             'form.contact_email' => ['nullable', 'email'],
         ]);
 
