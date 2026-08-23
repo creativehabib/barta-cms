@@ -1,5 +1,7 @@
 {{-- Scrolling breaking-news ticker. Hidden when there is no breaking news. --}}
-@php($breakingItems = \App\Models\Post::published()->breaking()->latest('published_at')->take(8)->get())
+@php
+    $breakingItems = \App\Models\Post::published()->breaking()->latest('published_at')->take(8)->get();
+@endphp
 @if ($breakingItems->isNotEmpty())
     <div class="border-b border-ink-100 bg-white">
         <div class="mx-auto flex max-w-7xl items-center gap-3 px-4 py-2">

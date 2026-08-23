@@ -22,7 +22,7 @@ class PlanManager extends Component
     public string $currency = 'BDT';
     public string $interval = 'month';
     public int $interval_count = 1;
-    public string $featuresText = '';
+    public array $featuresText = [];
     public bool $is_active = true;
     public int $position = 0;
 
@@ -45,7 +45,12 @@ class PlanManager extends Component
         $this->currency = $plan->currency;
         $this->interval = $plan->interval;
         $this->interval_count = (int) $plan->interval_count;
-        $this->featuresText = implode("\n", $plan->features ?? []);
+        foreach (barta_locales() as $loc) {
+            $this->featuresText[$loc] = collect($plan->features ?? [])
+                ->map(fn ($feature) => is_array($feature) ? ($feature[$loc] ?? '') : $feature)
+                ->filter(fn ($feature) => filled($feature))
+                ->implode("\n");
+        }
         $this->is_active = (bool) $plan->is_active;
         $this->position = (int) $plan->position;
         $this->showModal = true;
@@ -62,8 +67,17 @@ class PlanManager extends Component
             'interval_count' => ['required', 'integer', 'min:1'],
         ]);
 
-        $features = collect(explode("\n", $this->featuresText))
-            ->map(fn ($f) => trim($f))
+        $featureLines = collect(barta_locales())->mapWithKeys(fn ($loc) => [
+            $loc => collect(explode("\n", $this->featuresText[$loc] ?? ''))
+                ->map(fn ($feature) => trim($feature))
+                ->values(),
+        ]);
+        $featureCount = $featureLines->map->count()->max() ?? 0;
+        $features = collect(range(0, max(0, $featureCount - 1)))
+            ->map(fn ($index) => $featureLines
+                ->map(fn ($lines) => $lines->get($index))
+                ->filter(fn ($feature) => filled($feature))
+                ->all())
             ->filter()
             ->values()
             ->all();
@@ -107,9 +121,11 @@ class PlanManager extends Component
         $this->price = 0;
         $this->name = [];
         $this->description = [];
+        $this->featuresText = [];
         foreach (barta_locales() as $loc) {
             $this->name[$loc] = '';
             $this->description[$loc] = '';
+            $this->featuresText[$loc] = '';
         }
     }
 

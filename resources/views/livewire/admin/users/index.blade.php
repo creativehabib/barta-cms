@@ -116,6 +116,12 @@
                     </div>
 
                     <div>
+                        <label class="mb-1 block text-sm font-semibold">{{ __('Website') }}</label>
+                        <input type="url" wire:model="website" placeholder="https://example.com" class="w-full rounded-lg border-ink-200 text-sm focus:border-brand-500 focus:ring-brand-500">
+                        @error('website') <p class="mt-1 text-sm text-brand-600">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div>
                         <label class="mb-1 block text-sm font-semibold">{{ __('Roles') }}</label>
                         <div class="flex flex-wrap gap-3 rounded-lg border border-ink-100 p-3 text-sm">
                             @foreach ($allRoles as $r)

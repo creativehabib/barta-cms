@@ -1,7 +1,9 @@
 @extends('theme::layouts.app')
 
 @section('content')
-@php($loc = app()->getLocale())
+@php
+    $loc = app()->getLocale();
+@endphp
 <div class="mx-auto max-w-7xl px-4 py-6">
 
     {{-- Author header --}}

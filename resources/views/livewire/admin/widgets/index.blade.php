@@ -1,34 +1,79 @@
-<div class="mx-auto max-w-5xl space-y-5">
-    <div class="flex flex-wrap items-center justify-between gap-3">
-        <h1 class="text-2xl font-black">{{ __('Widgets') }}</h1>
-        <button wire:click="create" class="rounded-lg bg-brand-600 px-4 py-2 text-sm font-bold text-white hover:bg-brand-700">+ {{ __('New widget') }}</button>
+<div class="mx-auto max-w-6xl space-y-6" x-data="widgetSorter">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+        <div>
+            <div class="mb-1 flex items-center gap-2">
+                <span class="grid h-9 w-9 place-items-center rounded-xl bg-brand-50 text-lg text-brand-700">◫</span>
+                <h1 class="text-2xl font-black">{{ __('Widget layout') }}</h1>
+            </div>
+            <p class="text-sm text-ink-500">{{ __('Drag widgets to reorder them or move them between theme areas. Changes are saved automatically.') }}</p>
+        </div>
+        <button wire:click="create" class="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-md">
+            <span class="text-lg leading-none">+</span> {{ __('Add widget') }}
+        </button>
     </div>
 
-    <div class="grid gap-4 md:grid-cols-2">
+    <div class="flex min-h-6 items-center gap-2 text-sm" aria-live="polite">
+        <span x-show="saving" x-cloak class="inline-flex items-center gap-2 text-ink-500">
+            <span class="h-3.5 w-3.5 animate-spin rounded-full border-2 border-ink-200 border-t-brand-600"></span>
+            {{ __('Saving layout…') }}
+        </span>
+        @if ($orderMessage)
+            <span x-show="!saving" class="inline-flex items-center gap-1.5 font-semibold text-green-700">✓ {{ $orderMessage }}</span>
+        @endif
+        @error('order') <span class="font-semibold text-brand-700">{{ $message }}</span> @enderror
+    </div>
+
+    <div class="grid items-start gap-5 md:grid-cols-2 xl:grid-cols-3">
         @foreach ($areas as $areaKey => $areaLabel)
-            <div class="rounded-xl border border-ink-100 bg-white p-4">
-                <h3 class="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-ink-500">
-                    {{ __($areaLabel) }}
-                    <span class="rounded bg-ink-100 px-1.5 font-mono text-xs text-ink-400">{{ $areaKey }}</span>
-                </h3>
-                <div class="space-y-2">
+            <section class="overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-sm">
+                <header class="flex items-center justify-between border-b border-ink-100 bg-gradient-to-r from-ink-50 to-white px-4 py-3.5">
+                    <div>
+                        <h2 class="font-black text-ink-800">{{ __($areaLabel) }}</h2>
+                        <span class="font-mono text-[11px] text-ink-400">{{ $areaKey }}</span>
+                    </div>
+                    <span class="rounded-full bg-white px-2.5 py-1 text-xs font-bold text-ink-500 shadow-sm ring-1 ring-ink-100">
+                        {{ to_bn_number(collect($widgetsByArea[$areaKey] ?? [])->count()) }}
+                    </span>
+                </header>
+                <div data-widget-area="{{ $areaKey }}"
+                     class="min-h-32 space-y-2.5 p-3 transition-colors"
+                     :class="draggingId && 'bg-brand-50/40'"
+                     @dragover.prevent="move($event)"
+                     @drop.prevent="drop()">
                     @forelse (($widgetsByArea[$areaKey] ?? []) as $widget)
-                        <div class="flex items-center justify-between rounded-lg border border-ink-100 px-3 py-2">
-                            <div>
-                                <div class="text-sm font-semibold">{{ $widget->title ?: __($types[$widget->type] ?? $widget->type) }}</div>
-                                <div class="text-xs text-ink-400">{{ __($types[$widget->type] ?? $widget->type) }} · {{ __('pos') }} {{ to_bn_number($widget->position) }}</div>
+                        <article wire:key="widget-{{ $widget->id }}"
+                                 data-widget-id="{{ $widget->id }}"
+                                 draggable="true"
+                                 @dragstart="start($event, {{ $widget->id }})"
+                                 @dragend="draggingId = null"
+                                 :class="draggingId === {{ $widget->id }} && 'is-dragging scale-[.98] opacity-40'"
+                                 class="group flex cursor-grab items-center gap-3 rounded-xl border border-ink-100 bg-white p-3 shadow-sm transition hover:border-brand-200 hover:shadow-md active:cursor-grabbing">
+                            <div class="text-ink-300 transition group-hover:text-brand-500" title="{{ __('Drag to move') }}">
+                                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M7 4a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm-1.5 7.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM16 4a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm-1.5 7.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm1.5 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"/></svg>
                             </div>
-                            <div class="flex items-center gap-2">
-                                @if (! $widget->is_active) <span class="rounded bg-ink-100 px-1.5 text-xs text-ink-500">{{ __('off') }}</span> @endif
-                                <button wire:click="edit({{ $widget->id }})" class="text-sm font-semibold text-brand-600 hover:underline">{{ __('Edit') }}</button>
-                                <button wire:click="delete({{ $widget->id }})" wire:confirm="{{ __('Delete this widget?') }}" class="text-ink-400 hover:text-brand-600">&times;</button>
+                            <div class="min-w-0 flex-1">
+                                <div class="truncate text-sm font-bold text-ink-800">
+                                    {{ $widget->getTranslation('title', app()->getLocale(), false) ?: __($types[$widget->type] ?? $widget->type) }}
+                                </div>
+                                <div class="mt-0.5 flex items-center gap-1.5 text-xs text-ink-400">
+                                    <span>{{ __($types[$widget->type] ?? $widget->type) }}</span>
+                                    @if (! $widget->is_active)
+                                        <span class="rounded-full bg-amber-50 px-1.5 py-0.5 font-semibold text-amber-700">{{ __('Inactive') }}</span>
+                                    @endif
+                                </div>
                             </div>
-                        </div>
+                            <div class="flex items-center opacity-60 transition group-hover:opacity-100">
+                                <button wire:click="edit({{ $widget->id }})" class="rounded-lg p-2 text-xs font-bold text-brand-600 hover:bg-brand-50">{{ __('Edit') }}</button>
+                                <button wire:click="delete({{ $widget->id }})" wire:confirm="{{ __('Delete this widget?') }}" class="rounded-lg p-2 text-lg leading-none text-ink-300 hover:bg-brand-50 hover:text-brand-600">&times;</button>
+                            </div>
+                        </article>
                     @empty
-                        <p class="text-sm text-ink-400">{{ __('Empty area.') }}</p>
+                        <div class="pointer-events-none grid min-h-24 place-items-center rounded-xl border-2 border-dashed border-ink-100 text-center text-xs text-ink-400">
+                            <span><strong class="block text-ink-500">{{ __('Empty area') }}</strong>{{ __('Drop a widget here') }}</span>
+                        </div>
                     @endforelse
                 </div>
-            </div>
+            </section>
         @endforeach
     </div>
 
@@ -70,14 +115,11 @@
                         @error('settingsJson') <p class="mt-1 text-sm text-brand-600">{{ $message }}</p> @enderror
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="mb-1 block text-sm font-semibold">{{ __('Position') }}</label>
-                            <input type="number" wire:model="position" class="w-full rounded-lg border-ink-200 text-sm focus:border-brand-500 focus:ring-brand-500">
-                        </div>
-                        <label class="flex items-end gap-2 pb-2 text-sm">
+                    <div class="rounded-lg bg-ink-50 p-3">
+                        <label class="flex items-center gap-2 text-sm font-semibold">
                             <input type="checkbox" wire:model="is_active" class="rounded border-ink-300 text-brand-600"> {{ __('Active') }}
                         </label>
+                        <p class="mt-1 text-xs text-ink-400">{{ __('Use the widget board to control its position after saving.') }}</p>
                     </div>
 
                     <div class="flex justify-end gap-2 pt-2">

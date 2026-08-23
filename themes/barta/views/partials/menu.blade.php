@@ -3,7 +3,10 @@
     Expects: $items (Collection of top-level MenuItem, each with ->children).
 --}}
 @foreach ($items as $item)
-    @php($label = $item->getTranslation('label', app()->getLocale(), false) ?: $item->getTranslation('label', config('barta.default_locale', 'bn'), false))
+    @php
+        $label = $item->getTranslation('label', app()->getLocale(), false)
+            ?: $item->getTranslation('label', config('barta.default_locale', 'bn'), false);
+    @endphp
     @if ($item->children->isNotEmpty())
         <li x-data="{ open: false }" class="relative" x-on:mouseleave="open = false">
             <button x-on:mouseenter="open = true" x-on:click="open = !open"

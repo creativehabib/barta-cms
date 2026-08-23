@@ -24,7 +24,9 @@
         </div>
 
         {{-- Footer menu --}}
-        @php($footerMenu = $siteMenus->get('footer'))
+        @php
+            $footerMenu = $siteMenus->get('footer');
+        @endphp
         @if ($footerMenu && $footerMenu->items->isNotEmpty())
             <nav class="mt-8 flex flex-wrap gap-x-5 gap-y-2 border-t border-ink-800 pt-6 text-sm">
                 @foreach ($footerMenu->items as $item)

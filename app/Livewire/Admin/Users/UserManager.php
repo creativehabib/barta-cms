@@ -31,6 +31,7 @@ class UserManager extends Component
     public string $email = '';
     public string $password = '';
     public string $phone = '';
+    public string $website = '';
     public string $bio = '';
     public string $locale = 'bn';
     public bool $is_active = true;
@@ -58,6 +59,7 @@ class UserManager extends Component
         $this->email = $user->email;
         $this->password = '';
         $this->phone = (string) $user->phone;
+        $this->website = (string) $user->website;
         $this->bio = (string) $user->bio;
         $this->locale = $user->locale ?: 'bn';
         $this->is_active = (bool) $user->is_active;
@@ -75,6 +77,7 @@ class UserManager extends Component
             'email' => ['required', 'email', 'max:255', 'unique:users,email,'.($id ?? 'NULL').',id'],
             'password' => [$id ? 'nullable' : 'required', 'string', 'min:8'],
             'phone' => ['nullable', 'string', 'max:40'],
+            'website' => ['nullable', 'url', 'max:255'],
             'locale' => ['required', 'string', 'max:10'],
             'roles' => ['array'],
         ]);
@@ -84,6 +87,7 @@ class UserManager extends Component
         $user->username = $this->username;
         $user->email = $this->email;
         $user->phone = $this->phone ?: null;
+        $user->website = $this->website ?: null;
         $user->bio = $this->bio ?: null;
         $user->locale = $this->locale;
         $user->is_active = $this->is_active;
@@ -113,7 +117,7 @@ class UserManager extends Component
 
     protected function resetForm(): void
     {
-        $this->reset(['editingId', 'name', 'username', 'email', 'password', 'phone', 'bio', 'locale', 'is_active', 'roles']);
+        $this->reset(['editingId', 'name', 'username', 'email', 'password', 'phone', 'website', 'bio', 'locale', 'is_active', 'roles']);
         $this->locale = 'bn';
         $this->is_active = true;
         $this->roles = [];
