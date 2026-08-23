@@ -25,7 +25,13 @@
     </section>
 
 @elseif ($widget->type === 'category_list')
-    @php($cats = \App\Models\Category::active()->parents()->withCount(['posts' => fn ($q) => $q->published()])->orderBy('position')->get())
+    @php
+        $cats = \App\Models\Category::active()
+            ->parents()
+            ->withCount(['posts' => fn ($query) => $query->published()])
+            ->orderBy('position')
+            ->get();
+    @endphp
     <section class="mb-6">
         <h3 class="mb-2 border-l-4 border-brand-600 pl-2 text-lg font-black">{{ $title ?: __('Categories') }}</h3>
         <ul class="divide-y divide-ink-100 rounded-lg border border-ink-100">
@@ -39,7 +45,13 @@
     </section>
 
 @elseif ($widget->type === 'tag_cloud')
-    @php($tags = \App\Models\Tag::withCount('posts')->orderByDesc('posts_count')->take($count ?: 20)->get()->filter(fn ($t) => $t->posts_count > 0))
+    @php
+        $tags = \App\Models\Tag::withCount('posts')
+            ->orderByDesc('posts_count')
+            ->take($count ?: 20)
+            ->get()
+            ->filter(fn ($tag) => $tag->posts_count > 0);
+    @endphp
     @if ($tags->isNotEmpty())
         <section class="mb-6">
             <h3 class="mb-2 border-l-4 border-brand-600 pl-2 text-lg font-black">{{ $title ?: __('Tags') }}</h3>

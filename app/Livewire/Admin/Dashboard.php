@@ -32,7 +32,7 @@ class Dashboard extends Component
         return view('livewire.admin.dashboard', [
             'stats' => $stats,
             'recentPosts' => Post::with('author')->latest()->take(6)->get(),
-            'recentComments' => Comment::with('post')->latest()->take(6)->get(),
+            'recentComments' => Comment::with(['post', 'user'])->latest()->take(6)->get(),
         ]);
     }
 }
