@@ -1,4 +1,7 @@
 <div class="mx-auto max-w-5xl space-y-5">
+    @php
+        $locale = app()->getLocale();
+    @endphp
     <div class="flex flex-wrap items-center justify-between gap-3">
         <h1 class="text-2xl font-black">{{ __('Subscription plans') }}</h1>
         <button wire:click="create" class="rounded-lg bg-brand-600 px-4 py-2 text-sm font-bold text-white hover:bg-brand-700">+ {{ __('New plan') }}</button>
@@ -8,20 +11,28 @@
         @forelse ($plans as $plan)
             <div class="rounded-xl border border-ink-100 bg-white p-5">
                 <div class="flex items-start justify-between">
-                    <h3 class="text-lg font-black">{{ $plan->name }}</h3>
+                    <h3 class="text-lg font-black">{{ $plan->getTranslation('name', $locale, false) }}</h3>
                     @if (! $plan->is_active) <span class="rounded bg-ink-100 px-1.5 text-xs text-ink-500">{{ __('off') }}</span> @endif
                 </div>
                 <div class="mt-1 text-2xl font-black text-brand-600">
                     {{ money($plan->price) }}
                     <span class="text-sm font-semibold text-ink-400">/ {{ to_bn_number($plan->interval_count) }} {{ __($plan->interval) }}</span>
                 </div>
-                @if ($plan->description)
-                    <p class="mt-2 text-sm text-ink-500">{{ $plan->description }}</p>
+                @if ($description = $plan->getTranslation('description', $locale, false))
+                    <p class="mt-2 text-sm text-ink-500">{{ $description }}</p>
                 @endif
                 @if ($plan->features)
                     <ul class="mt-3 space-y-1 text-sm text-ink-600">
                         @foreach ($plan->features as $feature)
-                            <li class="flex gap-2"><span class="text-green-600">✓</span> {{ $feature }}</li>
+                            @php
+                                $localizedFeature = is_array($feature)
+                                    ? ($feature[$locale] ?? collect($feature)->first(fn ($value) => is_scalar($value)))
+                                    : $feature;
+                                $featureLabel = is_scalar($localizedFeature) ? (string) $localizedFeature : '';
+                            @endphp
+                            @if ($featureLabel !== '')
+                                <li class="flex gap-2"><span class="text-green-600">✓</span> {{ $featureLabel }}</li>
+                            @endif
                         @endforeach
                     </ul>
                 @endif
@@ -53,6 +64,10 @@
                             <label class="mb-1 block text-sm font-semibold">{{ __('Description') }} ({{ locale_name($loc) }})</label>
                             <textarea wire:model="description.{{ $loc }}" rows="2" class="w-full rounded-lg border-ink-200 text-sm focus:border-brand-500 focus:ring-brand-500"></textarea>
                         </div>
+                        <div>
+                            <label class="mb-1 block text-sm font-semibold">{{ __('Features') }} ({{ locale_name($loc) }})</label>
+                            <textarea wire:model="featuresText.{{ $loc }}" rows="3" class="w-full rounded-lg border-ink-200 text-sm focus:border-brand-500 focus:ring-brand-500" placeholder="{{ __('One feature per line') }}"></textarea>
+                        </div>
                     @endforeach
 
                     <div class="grid grid-cols-2 gap-3">
@@ -82,11 +97,6 @@
                             <label class="mb-1 block text-sm font-semibold">{{ __('Interval count') }}</label>
                             <input type="number" min="1" wire:model="interval_count" class="w-full rounded-lg border-ink-200 text-sm focus:border-brand-500 focus:ring-brand-500">
                         </div>
-                    </div>
-
-                    <div>
-                        <label class="mb-1 block text-sm font-semibold">{{ __('Features (one per line)') }}</label>
-                        <textarea wire:model="featuresText" rows="4" class="w-full rounded-lg border-ink-200 text-sm focus:border-brand-500 focus:ring-brand-500"></textarea>
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
