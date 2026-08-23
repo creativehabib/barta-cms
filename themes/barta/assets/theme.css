@@ -1,0 +1,76 @@
+/*
+ * Barta theme — supplemental styles.
+ *
+ * The bulk of the UI is Tailwind (compiled from resources/css/app.css by the
+ * app's Vite build; the tailwind.config.js `content` globs already include
+ * themes/**). This file only holds the few things Tailwind utilities can't do
+ * cleanly: the breaking-news ticker animation and article typography tweaks.
+ * Served via /themes/barta/assets/theme.css (see ThemeAssetController).
+ */
+
+/* ---- Breaking-news ticker -------------------------------------------------*/
+.barta-ticker {
+    overflow: hidden;
+    white-space: nowrap;
+}
+.barta-ticker__track {
+    display: inline-block;
+    padding-left: 100%;
+    animation: barta-ticker 30s linear infinite;
+}
+.barta-ticker:hover .barta-ticker__track {
+    animation-play-state: paused;
+}
+@keyframes barta-ticker {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
+
+/* ---- Line clamps (fallback for older builds) ------------------------------*/
+.barta-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.barta-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ---- Article body: comfortable Bengali reading ----------------------------*/
+.barta-article :lang(bn),
+.barta-article {
+    line-height: 2;
+}
+.barta-article p {
+    margin-bottom: 1.15em;
+}
+.barta-article h2,
+.barta-article h3 {
+    font-weight: 700;
+    margin: 1.4em 0 0.5em;
+    line-height: 1.4;
+}
+.barta-article img {
+    border-radius: 0.75rem;
+    margin: 1.25em 0;
+}
+.barta-article a {
+    color: #c81420;
+    text-decoration: underline;
+}
+.barta-article blockquote {
+    border-left: 4px solid #c81420;
+    padding-left: 1rem;
+    color: #434a58;
+    font-style: italic;
+    margin: 1.25em 0;
+}
+
+/* Respect reduced-motion preferences. */
+@media (prefers-reduced-motion: reduce) {
+    .barta-ticker__track { animation: none; padding-left: 0; }
+}

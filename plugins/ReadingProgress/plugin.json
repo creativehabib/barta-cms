@@ -1,0 +1,13 @@
+{
+    "name": "Reading Progress",
+    "slug": "reading-progress",
+    "version": "1.0.0",
+    "author": "Barta CMS",
+    "description": "Adds a reading-progress bar and a back-to-top button to the front-end, and logs every new comment. A reference plugin that demonstrates Barta's WordPress-style hook system (actions + filters).",
+    "provider": "Plugins\\ReadingProgress\\ReadingProgressServiceProvider",
+    "homepage": "https://github.com/",
+    "hooks": {
+        "actions": ["theme.head", "theme.footer", "comment.created"],
+        "filters": ["reading_progress.color"]
+    }
+}

@@ -1,0 +1,40 @@
+@import url('https://fonts.bunny.net/css?family=hind-siliguri:400,500,600,700&family=tiro-bangla:400');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html {
+        -webkit-text-size-adjust: 100%;
+    }
+    body {
+        @apply bg-gray-50 text-gray-900 antialiased;
+    }
+    :lang(bn) {
+        line-height: 1.9;
+    }
+}
+
+@layer components {
+    .btn {
+        @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50;
+    }
+    .btn-primary {
+        @apply btn bg-brand-600 text-white hover:bg-brand-700 focus:ring-brand-500;
+    }
+    .btn-ghost {
+        @apply btn bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-gray-400;
+    }
+    .form-input,
+    .form-textarea,
+    .form-select {
+        @apply w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500;
+    }
+    .card {
+        @apply rounded-xl border border-gray-200 bg-white shadow-sm;
+    }
+    .badge {
+        @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+    }
+}

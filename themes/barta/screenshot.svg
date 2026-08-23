@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" font-family="'Hind Siliguri','Segoe UI',sans-serif">
+  <rect width="1200" height="900" fill="#f8fafc"/>
+
+  <!-- Top bar -->
+  <rect width="1200" height="34" fill="#0f172a"/>
+  <text x="24" y="22" fill="#cbd5e1" font-size="13">২৩ আগস্ট, ২০২৬</text>
+  <text x="1176" y="22" fill="#cbd5e1" font-size="13" text-anchor="end">বাংলা | EN</text>
+
+  <!-- Masthead -->
+  <rect y="34" width="1200" height="92" fill="#ffffff"/>
+  <rect x="24" y="58" width="44" height="44" rx="8" fill="#c81420"/>
+  <text x="46" y="90" fill="#ffffff" font-size="26" font-weight="800" text-anchor="middle">ব</text>
+  <text x="84" y="82" fill="#0f172a" font-size="30" font-weight="800">বার্তা</text>
+  <text x="84" y="104" fill="#64748b" font-size="13">সংবাদ, বিশ্লেষণ ও মতামত</text>
+  <rect x="880" y="66" width="296" height="30" rx="15" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <text x="900" y="86" fill="#94a3b8" font-size="13">খবর খুঁজুন…</text>
+
+  <!-- Nav -->
+  <rect y="126" width="1200" height="46" fill="#c81420"/>
+  <g fill="#ffffff" font-size="15" font-weight="600">
+    <text x="24" y="155">হোম</text>
+    <text x="96" y="155">রাজনীতি</text>
+    <text x="196" y="155">অর্থনীতি</text>
+    <text x="300" y="155">খেলা</text>
+    <text x="380" y="155">বিনোদন</text>
+    <text x="480" y="155">প্রযুক্তি</text>
+    <text x="588" y="155">আন্তর্জাতিক</text>
+  </g>
+
+  <!-- Breaking ticker -->
+  <rect y="172" width="1200" height="36" fill="#fef2f2"/>
+  <rect x="24" y="178" width="96" height="24" rx="4" fill="#c81420"/>
+  <text x="72" y="195" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle">শীর্ষ সংবাদ</text>
+  <text x="136" y="195" fill="#7f1d1d" font-size="13">দেশের অর্থনীতিতে নতুন গতি • প্রযুক্তি খাতে বিনিয়োগ বৃদ্ধি • জাতীয় দলের জয়…</text>
+
+  <!-- Hero -->
+  <rect x="24" y="232" width="740" height="360" rx="12" fill="#e2e8f0"/>
+  <rect x="24" y="232" width="740" height="360" rx="12" fill="url(#g)"/>
+  <rect x="48" y="470" width="120" height="26" rx="4" fill="#c81420"/>
+  <text x="108" y="489" fill="#ffffff" font-size="13" font-weight="700" text-anchor="middle">প্রধান খবর</text>
+  <text x="48" y="536" fill="#ffffff" font-size="30" font-weight="800">শিরোনাম এখানে বড় করে দেখানো হবে</text>
+  <text x="48" y="568" fill="#e2e8f0" font-size="16">সংক্ষিপ্ত বিবরণ এখানে থাকবে যা পাঠককে খবরটির প্রতি আগ্রহী করবে।</text>
+
+  <!-- Side stack -->
+  <g>
+    <rect x="784" y="232" width="392" height="112" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="796" y="244" width="120" height="88" rx="6" fill="#e2e8f0"/>
+    <text x="928" y="272" fill="#0f172a" font-size="15" font-weight="700">দ্বিতীয় গুরুত্বপূর্ণ খবর</text>
+    <text x="928" y="296" fill="#64748b" font-size="12">উপশিরোনাম টেক্সট</text>
+
+    <rect x="784" y="356" width="392" height="112" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="796" y="368" width="120" height="88" rx="6" fill="#e2e8f0"/>
+    <text x="928" y="396" fill="#0f172a" font-size="15" font-weight="700">তৃতীয় খবরের শিরোনাম</text>
+    <text x="928" y="420" fill="#64748b" font-size="12">উপশিরোনাম টেক্সট</text>
+
+    <rect x="784" y="480" width="392" height="112" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="796" y="492" width="120" height="88" rx="6" fill="#e2e8f0"/>
+    <text x="928" y="520" fill="#0f172a" font-size="15" font-weight="700">চতুর্থ খবরের শিরোনাম</text>
+    <text x="928" y="544" fill="#64748b" font-size="12">উপশিরোনাম টেক্সট</text>
+  </g>
+
+  <!-- Section heading -->
+  <rect x="24" y="628" width="6" height="26" rx="3" fill="#c81420"/>
+  <text x="44" y="649" fill="#0f172a" font-size="22" font-weight="800">সর্বশেষ খবর</text>
+
+  <!-- Card grid -->
+  <g>
+    <rect x="24" y="672" width="276" height="200" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="24" y="672" width="276" height="120" rx="10" fill="#e2e8f0"/>
+    <text x="40" y="822" fill="#0f172a" font-size="14" font-weight="700">খবরের শিরোনাম এক</text>
+    <text x="40" y="846" fill="#64748b" font-size="11">২ ঘণ্টা আগে</text>
+
+    <rect x="312" y="672" width="276" height="200" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="312" y="672" width="276" height="120" rx="10" fill="#e2e8f0"/>
+    <text x="328" y="822" fill="#0f172a" font-size="14" font-weight="700">খবরের শিরোনাম দুই</text>
+    <text x="328" y="846" fill="#64748b" font-size="11">৩ ঘণ্টা আগে</text>
+
+    <rect x="600" y="672" width="276" height="200" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="600" y="672" width="276" height="120" rx="10" fill="#e2e8f0"/>
+    <text x="616" y="822" fill="#0f172a" font-size="14" font-weight="700">খবরের শিরোনাম তিন</text>
+    <text x="616" y="846" fill="#64748b" font-size="11">৪ ঘণ্টা আগে</text>
+
+    <!-- Sidebar widget -->
+    <rect x="888" y="628" width="288" height="244" rx="10" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="888" y="628" width="288" height="40" rx="10" fill="#0f172a"/>
+    <text x="908" y="654" fill="#ffffff" font-size="14" font-weight="700">সর্বাধিক পঠিত</text>
+    <text x="908" y="700" fill="#c81420" font-size="18" font-weight="800">১</text>
+    <text x="932" y="700" fill="#0f172a" font-size="13">জনপ্রিয় খবরের শিরোনাম</text>
+    <text x="908" y="742" fill="#c81420" font-size="18" font-weight="800">২</text>
+    <text x="932" y="742" fill="#0f172a" font-size="13">আরেকটি জনপ্রিয় খবর</text>
+    <text x="908" y="784" fill="#c81420" font-size="18" font-weight="800">৩</text>
+    <text x="932" y="784" fill="#0f172a" font-size="13">তৃতীয় জনপ্রিয় খবর</text>
+    <text x="908" y="826" fill="#c81420" font-size="18" font-weight="800">৪</text>
+    <text x="932" y="826" fill="#0f172a" font-size="13">চতুর্থ জনপ্রিয় খবর</text>
+  </g>
+
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="45%" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.72"/>
+    </linearGradient>
+  </defs>
+</svg>

@@ -1,0 +1,13 @@
+{
+    "name": "Barta",
+    "slug": "barta",
+    "version": "1.0.0",
+    "author": "Barta CMS",
+    "description": "The default Barta theme — a modern, responsive Bengali news layout inspired by leading Bangla dailies. Red accent, Hind Siliguri UI type, Tiro Bangla article body, full widget/ad/menu support.",
+    "screenshot": "screenshot.svg",
+    "supports": {
+        "widget_areas": ["sidebar", "home-top", "home-bottom", "footer-1", "footer-2", "footer-3"],
+        "menu_locations": ["primary", "footer", "top"],
+        "ad_slots": ["header", "home-hero", "in-article", "sidebar", "footer"]
+    }
+}
