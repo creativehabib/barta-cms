@@ -1,5 +1,7 @@
 {{-- Reusable sidebar. Uses configured 'sidebar' widgets, else sensible defaults. --}}
-@php($sidebarWidgets = \App\Models\Widget::active()->area('sidebar')->get())
+@php
+    $sidebarWidgets = \App\Models\Widget::active()->area('sidebar')->get();
+@endphp
 <aside class="space-y-6">
     @if ($sidebarWidgets->isNotEmpty())
         @foreach ($sidebarWidgets as $widget)
@@ -7,7 +9,9 @@
         @endforeach
     @else
         {{-- Default: most read --}}
-        @php($popular = \App\Models\Post::published()->orderByDesc('views')->take(5)->get())
+        @php
+            $popular = \App\Models\Post::published()->orderByDesc('views')->take(5)->get();
+        @endphp
         @if ($popular->isNotEmpty())
             <section>
                 <h3 class="mb-2 border-l-4 border-brand-600 pl-2 text-lg font-black">{{ app()->getLocale() === 'bn' ? 'সর্বাধিক পঠিত' : 'Most read' }}</h3>

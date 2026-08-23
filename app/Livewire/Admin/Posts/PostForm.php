@@ -7,6 +7,7 @@ use App\Models\Post;
 use App\Models\Tag;
 use App\Services\Ai\AiService;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -48,6 +49,9 @@ class PostForm extends Component
     public $cover;                 // freshly uploaded file
     public ?string $existingCover = null;
     public bool $removeCover = false;
+    public bool $showMediaLibrary = false;
+    public ?string $selectedMediaPath = null;
+    public ?string $selectedMediaUrl = null;
 
     public string $aiMessage = '';
     public array $aiTitleOptions = [];
@@ -109,6 +113,12 @@ class PostForm extends Component
 
     public function save(bool $andPublish = false)
     {
+        if ($this->selectedMediaPath && ! $this->isLibraryImage($this->selectedMediaPath)) {
+            $this->addError('cover', __('The selected media file is no longer available.'));
+
+            return;
+        }
+
         if ($andPublish) {
             $this->status = 'published';
         }
@@ -148,13 +158,20 @@ class PostForm extends Component
 
         $this->syncTags($post);
 
-        if ($this->removeCover) {
+        if ($this->removeCover || $this->cover || $this->selectedMediaPath) {
             $post->clearMediaCollection('featured');
         }
         if ($this->cover) {
-            $post->clearMediaCollection('featured');
-            $post->addMedia($this->cover->getRealPath())
-                ->usingFileName(Str::random(20).'.'.$this->cover->getClientOriginalExtension())
+            $fileName = Str::random(8).'-'.Str::slug(pathinfo($this->cover->getClientOriginalName(), PATHINFO_FILENAME))
+                .'.'.$this->cover->getClientOriginalExtension();
+            $path = $this->cover->storeAs('media', $fileName, 'public');
+
+            $post->addMediaFromDisk($path, 'public')
+                ->preservingOriginal()
+                ->toMediaCollection('featured');
+        } elseif ($this->selectedMediaPath) {
+            $post->addMediaFromDisk($this->selectedMediaPath, 'public')
+                ->preservingOriginal()
                 ->toMediaCollection('featured');
         }
 
@@ -182,6 +199,49 @@ class PostForm extends Component
     protected function clean(array $values): array
     {
         return array_filter($values, fn ($v) => filled($v));
+    }
+
+    public function openMediaLibrary(): void
+    {
+        $this->showMediaLibrary = true;
+    }
+
+    public function selectMedia(string $path): void
+    {
+        if (! $this->isLibraryImage($path)) {
+            $this->addError('cover', __('The selected media file is not a valid image.'));
+
+            return;
+        }
+
+        $this->selectedMediaPath = $path;
+        $this->selectedMediaUrl = Storage::disk('public')->url($path);
+        $this->cover = null;
+        $this->removeCover = false;
+        $this->showMediaLibrary = false;
+        $this->resetErrorBag('cover');
+    }
+
+    protected function isLibraryImage(string $path): bool
+    {
+        return Str::startsWith($path, 'media/')
+            && Storage::disk('public')->exists($path)
+            && in_array(strtolower(pathinfo($path, PATHINFO_EXTENSION)), ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif']);
+    }
+
+    protected function mediaImages(): array
+    {
+        return collect(Storage::disk('public')->files('media'))
+            ->filter(fn (string $path) => $this->isLibraryImage($path))
+            ->sortDesc()
+            ->take(60)
+            ->map(fn (string $path) => [
+                'path' => $path,
+                'name' => basename($path),
+                'url' => Storage::disk('public')->url($path),
+            ])
+            ->values()
+            ->all();
     }
 
     // -----------------------------------------------------------------
@@ -252,6 +312,7 @@ class PostForm extends Component
         return view('livewire.admin.posts.form', [
             'categories' => Category::orderBy('id')->get(),
             'locales' => barta_locales(),
+            'mediaImages' => $this->showMediaLibrary ? $this->mediaImages() : [],
         ]);
     }
 }

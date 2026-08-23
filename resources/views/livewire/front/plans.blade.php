@@ -1,5 +1,7 @@
 <div class="mx-auto max-w-7xl px-4 py-10">
-    @php($loc = app()->getLocale())
+    @php
+        $loc = app()->getLocale();
+    @endphp
 
     {{-- Heading --}}
     <div class="text-center">

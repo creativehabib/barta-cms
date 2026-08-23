@@ -121,10 +121,16 @@
                 <h3 class="mb-3 font-bold">{{ __('Featured image') }}</h3>
                 @if ($cover)
                     <img src="{{ $cover->temporaryUrl() }}" class="mb-2 aspect-video w-full rounded-lg object-cover">
+                @elseif ($selectedMediaUrl)
+                    <img src="{{ $selectedMediaUrl }}" class="mb-2 aspect-video w-full rounded-lg object-cover">
                 @elseif ($existingCover && ! $removeCover)
                     <img src="{{ $existingCover }}" class="mb-2 aspect-video w-full rounded-lg object-cover">
                 @endif
                 <input type="file" wire:model="cover" accept="image/*" class="w-full text-sm">
+                <button type="button" wire:click="openMediaLibrary"
+                        class="mt-3 w-full rounded-lg border border-ink-200 px-3 py-2 text-sm font-semibold text-brand-600 hover:bg-ink-50">
+                    {{ __('Choose from Media Library') }}
+                </button>
                 <div wire:loading wire:target="cover" class="mt-1 text-xs text-ink-400">{{ __('Uploading…') }}</div>
                 @error('cover') <p class="mt-1 text-sm text-brand-600">{{ $message }}</p> @enderror
                 @if ($existingCover)
@@ -166,4 +172,31 @@
             </div>
         </div>
     </form>
+
+    @if ($showMediaLibrary)
+        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" wire:click.self="$set('showMediaLibrary', false)">
+            <div class="flex max-h-[85vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+                <div class="flex items-center justify-between border-b border-ink-100 px-5 py-4">
+                    <div>
+                        <h2 class="text-lg font-black">{{ __('Media Library') }}</h2>
+                        <p class="text-xs text-ink-400">{{ __('Select an existing image to use as the featured image.') }}</p>
+                    </div>
+                    <button type="button" wire:click="$set('showMediaLibrary', false)" class="text-2xl text-ink-400 hover:text-ink-700">&times;</button>
+                </div>
+                <div class="grid grid-cols-2 gap-3 overflow-y-auto p-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                    @forelse ($mediaImages as $image)
+                        <button type="button" wire:click="selectMedia(@js($image['path']))"
+                                class="group overflow-hidden rounded-xl border border-ink-100 text-left hover:border-brand-500 hover:ring-2 hover:ring-brand-100">
+                            <img src="{{ $image['url'] }}" alt="{{ $image['name'] }}" class="aspect-square w-full object-cover">
+                            <span class="block truncate px-2 py-2 text-xs font-semibold">{{ $image['name'] }}</span>
+                        </button>
+                    @empty
+                        <div class="col-span-full rounded-xl border border-dashed border-ink-200 p-10 text-center text-sm text-ink-400">
+                            {{ __('No reusable images found. Upload an image here or add one in Media Library first.') }}
+                        </div>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+    @endif
 </div>

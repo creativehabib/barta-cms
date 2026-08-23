@@ -2,7 +2,9 @@
 <div class="border-b border-ink-100 bg-ink-50 text-xs text-ink-500">
     <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2">
         <div class="hidden sm:block">
-            @php($today = now())
+            @php
+                $today = now();
+            @endphp
             {{ localized_number($today->translatedFormat('j F Y')) }}
         </div>
 

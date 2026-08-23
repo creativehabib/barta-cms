@@ -1,5 +1,7 @@
 {{-- Newsletter opt-in box. Params: $heading (optional) --}}
-@php($heading = $heading ?? __('Newsletters'))
+@php
+    $heading = $heading ?? __('Newsletters');
+@endphp
 <div class="rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 p-5 text-white">
     <h3 class="text-lg font-black">{{ $heading }}</h3>
     <p class="mt-1 text-sm text-white/80">{{ setting('newsletter_pitch', __('Get the day\'s top stories in your inbox.')) }}</p>
