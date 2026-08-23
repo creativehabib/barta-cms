@@ -1,54 +1,39 @@
 <div class="mx-auto max-w-7xl space-y-7">
-    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-        <div class="flex flex-wrap items-center justify-between gap-5">
-            <div class="flex items-center gap-4">
-                <img src="{{ auth()->user()->avatarUrl() }}" alt="" class="h-14 w-14 rounded-2xl object-cover ring-4 ring-brand-50">
-                <div>
-                    <h1 class="text-xl font-black text-ink-900 sm:text-2xl">{{ __('Welcome, :name', ['name' => auth()->user()->name]) }}</h1>
-                    <p class="mt-1 text-sm text-slate-400">{{ __('Here is what is happening in your newsroom today.') }}</p>
-                </div>
-            </div>
-            <div class="text-left sm:text-right"><p class="text-xs font-bold text-slate-600">{{ now()->translatedFormat('l, j F Y') }}</p><p class="mt-1 text-[10px] capitalize text-slate-400">{{ auth()->user()->getRoleNames()->first() ?? __('Staff') }}</p></div>
-        </div>
-    </div>
-
-    <div class="flex items-center justify-between">
+    <div class="flex flex-wrap items-end justify-between gap-4">
         <div>
-            <h2 class="text-lg font-black">{{ __('Overview') }}</h2>
-            <p class="text-xs text-ink-400">{{ __('A live snapshot of your publication.') }}</p>
+            <p class="text-sm font-medium text-zinc-500">{{ now()->translatedFormat('l, j F Y') }}</p>
+            <h2 class="mt-1 text-2xl font-semibold tracking-tight text-zinc-950">{{ __('Welcome, :name', ['name' => auth()->user()->name]) }}</h2>
+            <p class="mt-1 text-sm text-zinc-500">{{ __('Here is what is happening in your newsroom today.') }}</p>
         </div>
-        <div class="flex items-center gap-2">
-            <a href="{{ route('home') }}" target="_blank" class="hidden rounded-lg border border-ink-200 bg-white px-3 py-2 text-xs font-bold text-ink-600 hover:border-brand-200 hover:text-brand-600 sm:block">{{ __('View website') }} ↗</a>
-            <a href="{{ route('admin.posts.create') }}" class="rounded-lg bg-brand-600 px-3 py-2 text-xs font-bold text-white shadow-sm hover:bg-brand-700">+ {{ __('Create post') }}</a>
-        </div>
+        <span class="rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium capitalize text-zinc-600 shadow-sm">{{ auth()->user()->getRoleNames()->first() ?? __('Staff') }}</span>
     </div>
 
     {{-- Stats --}}
     <div class="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
         @php
             $cards = [
-                ['icon' => '▤', 'tone' => 'brand', 'label' => __('Published'), 'value' => $stats['published'], 'sub' => __('Live stories')],
-                ['icon' => '✎', 'tone' => 'amber', 'label' => __('Drafts'), 'value' => $stats['drafts'], 'sub' => __('In progress')],
-                ['icon' => '◌', 'tone' => 'amber', 'label' => __('Review'), 'value' => $stats['pending_comments'], 'sub' => __('Pending comments')],
-                ['icon' => '◉', 'tone' => 'blue', 'label' => __('Total views'), 'value' => $stats['views'], 'sub' => __('All-time reach')],
-                ['icon' => '♙', 'tone' => 'green', 'label' => __('Subscribers'), 'value' => $stats['subscribers'], 'sub' => $stats['users'].' '.__('users')],
-                ['icon' => '□', 'tone' => 'brand', 'label' => __('Categories'), 'value' => $stats['categories'], 'sub' => __('Content sections')],
+                ['icon' => 'document', 'tone' => 'brand', 'label' => __('Published'), 'value' => $stats['published'], 'sub' => __('Live stories')],
+                ['icon' => 'document', 'tone' => 'amber', 'label' => __('Drafts'), 'value' => $stats['drafts'], 'sub' => __('In progress')],
+                ['icon' => 'chat', 'tone' => 'amber', 'label' => __('Review'), 'value' => $stats['pending_comments'], 'sub' => __('Pending comments')],
+                ['icon' => 'eye', 'tone' => 'blue', 'label' => __('Total views'), 'value' => $stats['views'], 'sub' => __('All-time reach')],
+                ['icon' => 'users', 'tone' => 'green', 'label' => __('Subscribers'), 'value' => $stats['subscribers'], 'sub' => $stats['users'].' '.__('users')],
+                ['icon' => 'folder', 'tone' => 'brand', 'label' => __('Categories'), 'value' => $stats['categories'], 'sub' => __('Content sections')],
             ];
         @endphp
         @foreach ($cards as $c)
-            <div class="group rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+            <div class="group rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition hover:border-zinc-300 hover:shadow-md">
                 <div class="flex items-start justify-between gap-3">
                     <div>
                         <p class="text-sm font-semibold text-ink-500">{{ $c['label'] }}</p>
                         <p class="mt-1 text-2xl font-black tracking-tight text-ink-900">{{ localized_number($c['value']) }}</p>
                     </div>
                     <span @class([
-                        'grid h-10 w-10 place-items-center rounded-xl text-lg font-black',
+                        'grid h-10 w-10 place-items-center rounded-lg',
                         'bg-brand-50 text-brand-700' => $c['tone'] === 'brand',
                         'bg-amber-50 text-amber-700' => $c['tone'] === 'amber',
                         'bg-blue-50 text-blue-700' => $c['tone'] === 'blue',
                         'bg-green-50 text-green-700' => $c['tone'] === 'green',
-                    ])>{{ $c['icon'] }}</span>
+                    ])><x-admin.icon :name="$c['icon']" /></span>
                 </div>
                 <p class="mt-2 truncate text-[11px] text-ink-400">{{ $c['sub'] }}</p>
             </div>
