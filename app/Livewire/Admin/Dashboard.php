@@ -9,6 +9,7 @@ use App\Models\Post;
 use App\Models\Subscriber;
 use App\Models\Subscription;
 use App\Models\User;
+use Illuminate\Support\Carbon;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -35,8 +36,9 @@ class Dashboard extends Component
         $publishedByDay = Post::where('type', 'post')
             ->whereNotNull('published_at')
             ->where('published_at', '>=', now()->subDays(13)->startOfDay())
-            ->get(['published_at'])
-            ->countBy(fn (Post $post) => $post->published_at->toDateString());
+            ->toBase()
+            ->pluck('published_at')
+            ->countBy(fn ($publishedAt) => Carbon::parse($publishedAt)->toDateString());
 
         $publishingActivity = collect(range(13, 0))->map(function (int $daysAgo) use ($publishedByDay) {
             $date = now()->subDays($daysAgo);
