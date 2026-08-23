@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Widgets;
 
 use App\Models\Widget;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -39,6 +40,7 @@ class WidgetManager extends Component
     public int $position = 0;
     public bool $is_active = true;
     public string $settingsJson = '';
+    public string $orderMessage = '';
 
     public function create(): void
     {
@@ -81,10 +83,13 @@ class WidgetManager extends Component
         }
 
         $widget = $this->editingId ? Widget::findOrFail($this->editingId) : new Widget();
+        $isNew = ! $widget->exists;
         $widget->setTranslations('title', array_filter($this->title, 'filled'));
         $widget->area = $this->area;
         $widget->type = $this->type;
-        $widget->position = $this->position;
+        $widget->position = $isNew
+            ? ((int) Widget::where('area', $this->area)->max('position')) + 1
+            : $this->position;
         $widget->is_active = $this->is_active;
         $widget->settings = $settings;
         $widget->save();
@@ -98,6 +103,50 @@ class WidgetManager extends Component
     {
         Widget::whereKey($id)->delete();
         session()->flash('status', __('Widget deleted.'));
+    }
+
+    /** Persist the order produced by the drag-and-drop widget board. */
+    public function reorderWidgets(array $areas): void
+    {
+        $allowedAreas = array_keys(self::AREAS);
+
+        if (collect($areas)->only($allowedAreas)->contains(fn ($ids) => ! is_array($ids))) {
+            $this->addError('order', __('The widget order could not be saved. Please refresh and try again.'));
+
+            return;
+        }
+
+        $submittedIds = collect($areas)
+            ->only($allowedAreas)
+            ->flatten()
+            ->map(fn ($id) => (int) $id);
+
+        if ($submittedIds->duplicates()->isNotEmpty()) {
+            $this->addError('order', __('A widget cannot appear in more than one area.'));
+
+            return;
+        }
+
+        $validIds = Widget::whereKey($submittedIds->all())->pluck('id')->map(fn ($id) => (int) $id);
+        if ($validIds->count() !== $submittedIds->count()) {
+            $this->addError('order', __('The widget order could not be saved. Please refresh and try again.'));
+
+            return;
+        }
+
+        DB::transaction(function () use ($areas, $allowedAreas): void {
+            foreach ($allowedAreas as $area) {
+                foreach (array_values($areas[$area] ?? []) as $position => $id) {
+                    Widget::whereKey((int) $id)->update([
+                        'area' => $area,
+                        'position' => $position + 1,
+                    ]);
+                }
+            }
+        });
+
+        $this->resetErrorBag('order');
+        $this->orderMessage = __('Widget layout saved.');
     }
 
     protected function resetForm(): void
