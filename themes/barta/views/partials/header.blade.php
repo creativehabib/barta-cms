@@ -27,7 +27,9 @@
                 <li>
                     <a href="{{ route('home') }}" class="block px-3 py-3 text-sm font-bold hover:bg-brand-700">{{ app()->getLocale() === 'bn' ? 'হোম' : 'Home' }}</a>
                 </li>
-                @php($primary = $siteMenus->get('primary'))
+                @php
+                    $primary = $siteMenus->get('primary');
+                @endphp
                 @if ($primary && $primary->items->isNotEmpty())
                     @include('theme::partials.menu', ['items' => $primary->items])
                 @else
@@ -65,7 +67,9 @@
                 <button type="submit" class="rounded-r-md bg-brand-800 px-4">🔍</button>
             </form>
             <ul class="pb-3">
-                @php($primary = $siteMenus->get('primary'))
+                @php
+                    $primary = $siteMenus->get('primary');
+                @endphp
                 @if ($primary && $primary->items->isNotEmpty())
                     @foreach ($primary->items as $item)
                         <li><a href="{{ $item->resolveUrl() }}" class="block px-4 py-2 text-sm font-semibold hover:bg-brand-700">{{ $item->getTranslation('label', app()->getLocale(), false) }}</a></li>

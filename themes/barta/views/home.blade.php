@@ -49,7 +49,9 @@
 
             {{-- Category rails --}}
             @foreach ($sections as $section)
-                @php($rail = $section->latestPosts)
+                @php
+                    $rail = $section->latestPosts;
+                @endphp
                 <section>
                     <h2 class="mb-4 flex items-center justify-between border-b-2 border-brand-600 pb-1">
                         <a href="{{ $section->url() }}" class="text-xl font-black hover:text-brand-700">
