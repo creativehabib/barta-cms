@@ -20,8 +20,8 @@
                     <tr class="hover:bg-ink-50/50">
                         <td class="px-4 py-3">
                             <span class="inline-block h-3 w-3 rounded-full align-middle" style="background: {{ $cat->color ?: '#c81420' }}"></span>
-                            <span class="font-semibold">{{ $cat->name }}</span>
-                            @if ($cat->parent) <span class="text-xs text-ink-400">↳ {{ $cat->parent->name }}</span> @endif
+                            <span class="font-semibold">{{ $cat->getTranslation('name', app()->getLocale(), false) }}</span>
+                            @if ($cat->parent) <span class="text-xs text-ink-400">↳ {{ $cat->parent->getTranslation('name', app()->getLocale(), false) }}</span> @endif
                         </td>
                         <td class="px-4 py-3 font-mono text-xs text-ink-500">{{ $cat->slug }}</td>
                         <td class="px-4 py-3 text-ink-500">{{ to_bn_number($cat->posts_count) }}</td>
@@ -59,7 +59,7 @@
                                 <option value="">{{ __('— none —') }}</option>
                                 @foreach ($categories as $c)
                                     @if ($c->id !== $editingId)
-                                        <option value="{{ $c->id }}">{{ $c->name }}</option>
+                                        <option value="{{ $c->id }}">{{ $c->getTranslation('name', app()->getLocale(), false) }}</option>
                                     @endif
                                 @endforeach
                             </select>

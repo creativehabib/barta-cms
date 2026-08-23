@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 /**
  * Resolves the permalink catch-all (/{path}) to a single article.
@@ -18,9 +17,7 @@ class PostController extends Controller
 {
     public function show(Request $request, string $path)
     {
-        $slug = Str::afterLast(trim($path, '/'), '/');
-
-        $post = app('barta.permalink')->resolveOrFail($slug);
+        $post = app('barta.permalink')->resolvePathOrFail($path);
 
         // Static pages have their own dedicated /page/{slug} route.
         abort_if($post->type === 'page', 404);

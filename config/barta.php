@@ -42,6 +42,7 @@ return [
         'day'      => '{year}/{month}/{day}/{slug}',
         'postname' => '{slug}',
         'category' => '{category}/{slug}',
+        'custom'   => '{category}/{slug}',
     ],
 
     /*

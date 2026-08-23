@@ -1,7 +1,9 @@
 @extends('theme::layouts.app')
 
 @section('content')
-@php($loc = app()->getLocale())
+@php
+    $loc = app()->getLocale();
+@endphp
 <div class="mx-auto max-w-4xl px-4 py-8">
 
     <h1 class="text-3xl font-black">{{ app()->getLocale() === 'bn' ? 'আমার অ্যাকাউন্ট' : 'My account' }}</h1>
@@ -71,7 +73,9 @@
                                 <td class="px-4 py-3 font-semibold capitalize">{{ $payment->gateway }}</td>
                                 <td class="px-4 py-3 font-bold">{{ money($payment->amount, $payment->currency) }}</td>
                                 <td class="px-4 py-3">
-                                    @php($map = ['success' => 'bg-green-100 text-green-700', 'pending' => 'bg-amber-100 text-amber-700', 'failed' => 'bg-red-100 text-red-700'])
+                                    @php
+                                        $map = ['success' => 'bg-green-100 text-green-700', 'pending' => 'bg-amber-100 text-amber-700', 'failed' => 'bg-red-100 text-red-700'];
+                                    @endphp
                                     <span class="rounded-full px-2.5 py-1 text-xs font-bold @class([$map[$payment->status] ?? 'bg-ink-100 text-ink-600'])">
                                         {{ __(ucfirst($payment->status)) }}
                                     </span>
